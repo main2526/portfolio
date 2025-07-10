@@ -33,6 +33,7 @@ const TechIcons = {
 
 const skills = [
   {
+    id: "html",
     icon: "HTML",
     color: "#E34F26",
     category: "Frontend",
@@ -42,6 +43,7 @@ const skills = [
     projects: 50,
   },
   {
+    id: "css",
     icon: "CSS",
     color: "#1572B6",
     category: "Frontend",
@@ -51,6 +53,7 @@ const skills = [
     projects: 45,
   },
   {
+    id: "javascript",
     icon: "JavaScript",
     color: "#F7DF1E",
     category: "Programming",
@@ -60,6 +63,7 @@ const skills = [
     projects: 40,
   },
   {
+    id: "typescript",
     icon: "TypeScript",
     color: "#3178C6",
     category: "Programming",
@@ -69,6 +73,7 @@ const skills = [
     projects: 35,
   },
   {
+    id: "react",
     icon: "React",
     color: "#61DAFB",
     category: "Framework",
@@ -78,6 +83,7 @@ const skills = [
     projects: 42,
   },
   {
+    id: "nextjs",
     icon: "NextJS",
     color: "#000000",
     category: "Framework",
@@ -87,6 +93,7 @@ const skills = [
     projects: 28,
   },
   {
+    id: "dotnet",
     icon: "DotNet",
     color: "#512BD4",
     category: "Backend",
@@ -96,6 +103,7 @@ const skills = [
     projects: 25,
   },
   {
+    id: "postgresql",
     icon: "PostgreSQL",
     color: "#336791",
     category: "Database",
@@ -105,6 +113,7 @@ const skills = [
     projects: 20,
   },
   {
+    id: "sql",
     icon: "SQL",
     color: "#4479A1",
     category: "Database",
@@ -114,6 +123,7 @@ const skills = [
     projects: 22,
   },
   {
+    id: "git",
     icon: "Git",
     color: "#F05032",
     category: "Tools",
@@ -123,6 +133,7 @@ const skills = [
     projects: 60,
   },
   {
+    id: "github",
     icon: "GitHub",
     color: "#181717",
     category: "Platform",
@@ -156,6 +167,12 @@ const MatrixRain = () => {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?";
 
+  // Evitar window en SSR
+  const [height, setHeight] = useState(1000);
+  useEffect(() => {
+    setHeight(window.innerHeight);
+  }, []);
+
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {[...Array(50)].map((_, i) => (
@@ -167,7 +184,7 @@ const MatrixRain = () => {
             top: `-20px`,
           }}
           animate={{
-            y: [0, window.innerHeight + 100],
+            y: [0, height + 100],
             opacity: [0, 0.8, 0],
           }}
           transition={{
@@ -274,8 +291,20 @@ const HologramScanner = () => {
   );
 };
 
-// Professional Skill Tooltip Component
-const SkillTooltip = ({ skill, isVisible, position }) => {
+// Define Skill type based on your skills array
+type Skill = typeof skills[number];
+
+// Asegura que icon sea keyof typeof TechIcons
+type SkillWithIcon = Omit<Skill, "icon"> & { icon: keyof typeof TechIcons };
+
+// Cambia el tipo de TooltipProps y IconCardProps para usar SkillWithIcon
+type TooltipProps = {
+  skill: SkillWithIcon;
+  isVisible: boolean;
+  position: { x: number; y: number };
+};
+const SkillTooltip = ({ skill, isVisible, position }: TooltipProps) => {
+  const color = skill.color || "#000000";
   return (
     <AnimatePresence>
       {isVisible && (
@@ -291,29 +320,25 @@ const SkillTooltip = ({ skill, isVisible, position }) => {
           exit={{ opacity: 0, scale: 0.8, y: 20 }}
           transition={{ duration: 0.3, ease: "easeOut" }}
         >
-          {/* Tooltip Container */}
           <div className="relative">
-            {/* Glow Effect */}
             <div
               className="absolute inset-0 rounded-2xl blur-xl opacity-60"
               style={{
-                background: `linear-gradient(135deg, ${skill.color}40, ${skill.color}20)`,
+                background: `linear-gradient(135deg, ${color}66, ${color}33)`,
                 transform: "scale(1.1)",
               }}
             />
-
-            {/* Main Tooltip */}
             <div
               className="relative bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-2xl border-2 min-w-80"
-              style={{ borderColor: `${skill.color}40` }}
+              style={{ borderColor: `${color}66` }}
             >
               {/* Header */}
               <div className="flex items-center gap-4 mb-4">
                 <div
                   className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
                   style={{
-                    backgroundColor: `${skill.color}15`,
-                    border: `2px solid ${skill.color}30`,
+                    backgroundColor: `${color}15`,
+                    border: `2px solid ${color}30`,
                   }}
                 >
                   {React.createElement(TechIcons[skill.icon], {
@@ -322,12 +347,7 @@ const SkillTooltip = ({ skill, isVisible, position }) => {
                   })}
                 </div>
                 <div>
-                  <h3
-                    className="text-xl font-bold"
-                    style={{ color: skill.color }}
-                  >
-                    {skill.name}
-                  </h3>
+                  {/* No mostrar nombre */}
                   <span className="text-sm text-gray-500 font-medium">
                     {skill.category}
                   </span>
@@ -387,23 +407,21 @@ const SkillTooltip = ({ skill, isVisible, position }) => {
                 <div
                   className="px-3 py-1 rounded-full text-xs font-medium"
                   style={{
-                    backgroundColor: `${skill.color}15`,
-                    color: skill.color,
-                    border: `1px solid ${skill.color}30`,
+                    backgroundColor: `${color}15`,
+                    color: color,
+                    border: `1px solid ${color}33`,
                   }}
                 >
                   {skill.experience} Experience
                 </div>
               </div>
             </div>
-
-            {/* Tooltip Arrow */}
             <div
               className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0"
               style={{
                 borderLeft: "8px solid transparent",
                 borderRight: "8px solid transparent",
-                borderTop: `8px solid ${skill.color}40`,
+                borderTop: `8px solid ${color}66`,
               }}
             />
           </div>
@@ -414,17 +432,23 @@ const SkillTooltip = ({ skill, isVisible, position }) => {
 };
 
 // Enhanced Icon Card Component
-const IconCard = ({ skill, index, showContent }) => {
+type IconCardProps = {
+  skill: SkillWithIcon;
+  index: number;
+  showContent: boolean;
+};
+const IconCard = ({ skill, index, showContent }: IconCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const IconComponent = TechIcons[skill.icon];
 
-  const handleMouseEnter = (e) => {
+  // Tipar correctamente los eventos del mouse
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsHovered(true);
     setMousePosition({ x: e.clientX, y: e.clientY });
   };
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     setMousePosition({ x: e.clientX, y: e.clientY });
   };
 
@@ -517,8 +541,8 @@ const IconCard = ({ skill, index, showContent }) => {
           </motion.div>
         </motion.div>
 
-        {/* Skill Name (Always Visible) */}
-        <motion.div
+        {/* Skill Name (NO mostrar) */}
+        {/* <motion.div
           className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -535,7 +559,7 @@ const IconCard = ({ skill, index, showContent }) => {
           >
             {skill.name}
           </motion.h3>
-        </motion.div>
+        </motion.div> */}
       </motion.div>
 
       {/* Professional Tooltip */}
@@ -811,7 +835,7 @@ export default function EnhancedSkillsPage() {
               transition={{ delay: 2 }}
             >
               <p>v2.0.1</p>
-              <p>BUILD: 2024</p>
+              <p>BUILD: 2025</p>
             </motion.div>
           </motion.div>
         )}
@@ -873,7 +897,7 @@ export default function EnhancedSkillsPage() {
                   {skills.map((skill, index) => (
                     <IconCard
                       key={skill.icon + "-" + index}
-                      skill={skill}
+                      skill={skill as SkillWithIcon}
                       index={index}
                       showContent={showContent}
                     />
