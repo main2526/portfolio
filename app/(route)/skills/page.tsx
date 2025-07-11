@@ -1,6 +1,6 @@
-'use client'
-import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+"use client"
+import { useState, useRef } from "react"
+import { motion, useMotionValue, useTransform, type PanInfo } from "framer-motion"
 import {
   SiHtml5,
   SiCss3,
@@ -13,7 +13,7 @@ import {
   SiMysql,
   SiGit,
   SiGithub,
-} from "react-icons/si";
+} from "react-icons/si"
 
 const TechIcons = {
   HTML: SiHtml5,
@@ -27,7 +27,7 @@ const TechIcons = {
   SQL: SiMysql,
   Git: SiGit,
   GitHub: SiGithub,
-};
+}
 
 const skills: SkillType[] = [
   {
@@ -85,212 +85,284 @@ const skills: SkillType[] = [
     color: "#181717",
     name: "GitHub",
   },
-];
+]
 
-function MetallicIconCard({ skill }: { skill: any }) {
-  const [isHovered, setIsHovered] = useState(false);
-  const IconComponent = TechIcons[skill.icon as keyof typeof TechIcons];
+function MetallicIconCard({ skill, isActive = false }: { skill: any; isActive?: boolean }) {
+  const IconComponent = TechIcons[skill.icon as keyof typeof TechIcons]
 
   return (
     <motion.div
-      className="flex flex-col items-center group cursor-pointer"
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.5 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="flex flex-col items-center justify-center w-full h-full"
+      animate={{
+        scale: isActive ? 1 : 0.9,
+      }}
+      transition={{ duration: 0.3 }}
     >
       {/* Efecto metálico tipo Apple */}
       <motion.div
-        className="relative w-24 h-24 rounded-2xl flex items-center justify-center mb-3"
+        className="relative w-28 h-28 rounded-3xl flex items-center justify-center mb-4"
         style={{
-          background:
-            "linear-gradient(135deg, #f5f5f7 0%, #e3e3e6 40%, #bfc0c2 100%)",
-          boxShadow:
-            isHovered
-              ? "0 8px 32px rgba(0,0,0,0.18), 0 1.5px 0.5px #fff, 0 0 0 2px #e3e3e6"
-              : "0 4px 16px rgba(0,0,0,0.10)",
-          border: "1.5px solid #e3e3e6",
+          background: "linear-gradient(135deg, #f5f5f7 0%, #e3e3e6 40%, #bfc0c2 100%)",
+          boxShadow: isActive
+            ? "0 12px 40px rgba(0,0,0,0.15), 0 2px 1px #fff, 0 0 0 3px #e3e3e6"
+            : "0 6px 20px rgba(0,0,0,0.08)",
+          border: "2px solid #e3e3e6",
         }}
         animate={{
-          scale: isHovered ? 1.08 : 1,
-          boxShadow: isHovered
-            ? "0 8px 32px rgba(0,0,0,0.18), 0 1.5px 0.5px #fff, 0 0 0 2px #e3e3e6"
-            : "0 4px 16px rgba(0,0,0,0.10)",
+          boxShadow: isActive
+            ? "0 12px 40px rgba(0,0,0,0.15), 0 2px 1px #fff, 0 0 0 3px #e3e3e6"
+            : "0 6px 20px rgba(0,0,0,0.08)",
         }}
         transition={{ duration: 0.3 }}
       >
         {/* Reflejo metálico */}
         <motion.div
-          className="absolute inset-0 rounded-2xl pointer-events-none"
+          className="absolute inset-0 rounded-3xl pointer-events-none"
           style={{
             background:
-              "linear-gradient(120deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.1) 60%, transparent 100%)",
+              "linear-gradient(120deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.2) 60%, transparent 100%)",
           }}
           animate={{
-            opacity: isHovered ? 1 : 0.7,
+            opacity: isActive ? 1 : 0.7,
           }}
           transition={{ duration: 0.3 }}
         />
         <IconComponent
-          size={isHovered ? 54 : 48}
+          size={isActive ? 56 : 50}
           style={{
             color: skill.color,
-            filter: isHovered
-              ? `drop-shadow(0 0 12px ${skill.color}80) brightness(1.1)`
-              : `drop-shadow(0 0 6px ${skill.color}40)`,
+            filter: isActive
+              ? `drop-shadow(0 0 16px ${skill.color}80) brightness(1.2)`
+              : `drop-shadow(0 0 8px ${skill.color}40)`,
             transition: "all 0.3s cubic-bezier(.4,0,.2,1)",
           }}
         />
       </motion.div>
-      <span className="text-base font-semibold text-gray-800" style={{letterSpacing:1}}>{skill.name}</span>
+      <span
+        className={`text-lg font-bold tracking-wide transition-all duration-300 ${
+          isActive ? "text-gray-900" : "text-gray-600"
+        }`}
+      >
+        {skill.name}
+      </span>
     </motion.div>
-  );
+  )
 }
 
 interface SkillType {
-  icon: keyof typeof TechIcons;
-  color: string;
-  name: string;
+  icon: keyof typeof TechIcons
+  color: string
+  name: string
 }
 
-function TVIconCarouselMobile({ skills }: { skills: SkillType[] }) {
-  const [current, setCurrent] = useState(1); // Empieza en el segundo para centrar
-  const total = skills.length;
+function SwipeableCarousel({ skills }: { skills: SkillType[] }) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const x = useMotionValue(0)
+  const containerRef = useRef<HTMLDivElement>(null)
 
-  // Navegación
-  const goPrev = () => setCurrent((prev) => (prev === 0 ? total - 1 : prev - 1));
-  const goNext = () => setCurrent((prev) => (prev === total - 1 ? 0 : prev + 1));
+  // Transformaciones para el efecto de stack
+  const rotate = useTransform(x, [-200, 0, 200], [-15, 0, 15])
+  const opacity = useTransform(x, [-200, -100, 0, 100, 200], [0.5, 0.8, 1, 0.8, 0.5])
 
-  // Swipe touch
-  const touchStartX = useRef<number | null>(null);
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const delta = e.changedTouches[0].clientX - touchStartX.current;
-    if (delta > 40) goPrev();
-    if (delta < -40) goNext();
-    touchStartX.current = null;
-  };
+  const handleDragEnd = (event: any, info: PanInfo) => {
+    setIsDragging(false)
+    const threshold = 100
 
-  // Obtener los 3 íconos a mostrar (anterior, actual, siguiente)
-  const getVisibleSkills = () => {
-    const prev = (current - 1 + total) % total;
-    const next = (current + 1) % total;
-    return [skills[prev], skills[current], skills[next]];
-  };
-  const visibleSkills = getVisibleSkills();
+    if (info.offset.x > threshold && currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1)
+    } else if (info.offset.x < -threshold && currentIndex < skills.length - 1) {
+      setCurrentIndex(currentIndex + 1)
+    }
+
+    x.set(0)
+  }
+
+  const goToSlide = (index: number) => {
+    setCurrentIndex(index)
+  }
 
   return (
-    <div className="w-full flex flex-col items-center justify-center gap-6">
-      <h2
-        className="text-5xl font-extrabold mb-6 tracking-tight text-center"
-      >
+    <div className="w-full flex flex-col items-center justify-center gap-8">
+      <h2 className="text-5xl font-extrabold mb-4 tracking-tight text-center bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
         SKILLS
       </h2>
-      <div className="relative w-full flex items-center justify-center" style={{ minHeight: 220 }}>
-        {/* Flecha izquierda */}
-        <button
-          onClick={goPrev}
-          className="fixed left-2 bottom-1/2 translate-y-1/2 z-30 p-2 rounded-full bg-white/80 shadow border border-gray-200 active:scale-95 transition sm:hidden"
-          aria-label="Anterior"
-          style={{ left: 12 }}
-        >
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        </button>
-        {/* Carrusel principal */}
-        <motion.div
-          className="w-full flex items-center justify-center select-none gap-4 px-2"
-          style={{ minHeight: 200 }}
-          onTouchStart={handleTouchStart}
-          onTouchEnd={handleTouchEnd}
-        >
-          {visibleSkills.map((skill, idx) => (
+
+      {/* Carrusel principal con efecto stack */}
+      <div ref={containerRef} className="relative w-full max-w-sm mx-auto" style={{ height: 320 }}>
+        {skills.map((skill, index) => {
+          const isActive = index === currentIndex
+          const isPrev = index === currentIndex - 1
+          const isNext = index === currentIndex + 1
+          const isVisible = isActive || isPrev || isNext
+
+          if (!isVisible) return null
+
+          let zIndex = 0
+          let translateX = 0
+          let translateY = 0
+          let scale = 0.85
+          let rotateY = 0
+
+          if (isActive) {
+            zIndex = 30
+            scale = 1
+          } else if (isPrev) {
+            zIndex = 20
+            translateX = -60
+            translateY = 20
+            rotateY = 25
+            scale = 0.9
+          } else if (isNext) {
+            zIndex = 20
+            translateX = 60
+            translateY = 20
+            rotateY = -25
+            scale = 0.9
+          }
+
+          return (
             <motion.div
               key={skill.name}
-              initial={{ opacity: 0, scale: 0.8, y: 40 }}
-              animate={{
-                opacity: 1,
-                scale: idx === 1 ? 1.15 : 0.8,
-                y: idx === 1 ? 0 : 30,
-                filter: idx === 1 ? 'drop-shadow(0 8px 32px rgba(0,0,0,0.10))' : 'none',
+              className="absolute inset-0 cursor-grab active:cursor-grabbing"
+              style={{
+                zIndex,
+                x: isActive ? x : translateX,
+                rotateZ: isActive ? rotate : 0,
+                opacity: isActive ? opacity : 0.6,
               }}
-              transition={{ duration: 0.7, ease: [0.22, 0.61, 0.36, 1] }}
-              className={`mx-auto flex flex-col items-center justify-center ${idx === 1 ? 'z-10' : 'z-0'}`}
-              style={{ width: idx === 1 ? 170 : 90, height: idx === 1 ? 170 : 90 }}
+              animate={{
+                x: isActive ? undefined : translateX,
+                y: translateY,
+                scale,
+                rotateY,
+              }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+              }}
+              drag={isActive ? "x" : false}
+              dragConstraints={{ left: -200, right: 200 }}
+              dragElastic={0.2}
+              onDragStart={() => setIsDragging(true)}
+              onDragEnd={handleDragEnd}
+              whileTap={{ scale: isActive ? 0.95 : scale }}
             >
-              <MetallicIconCard skill={skill} />
+              <motion.div
+                className="w-full h-full rounded-3xl p-6 flex items-center justify-center"
+                style={{
+                  background: "linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.7) 100%)",
+                  backdropFilter: "blur(20px)",
+                  border: "1px solid rgba(255,255,255,0.3)",
+                  boxShadow: isActive
+                    ? "0 20px 60px rgba(0,0,0,0.1), 0 8px 20px rgba(0,0,0,0.06)"
+                    : "0 10px 30px rgba(0,0,0,0.08)",
+                }}
+                animate={{
+                  boxShadow: isActive
+                    ? "0 20px 60px rgba(0,0,0,0.1), 0 8px 20px rgba(0,0,0,0.06)"
+                    : "0 10px 30px rgba(0,0,0,0.08)",
+                }}
+              >
+                <MetallicIconCard skill={skill} isActive={isActive} />
+              </motion.div>
             </motion.div>
-          ))}
-        </motion.div>
-        {/* Flecha derecha */}
-        <button
-          onClick={goNext}
-          className="fixed right-2 bottom-1/2 translate-y-1/2 z-30 p-2 rounded-full bg-white/80 shadow border border-gray-200 active:scale-95 transition sm:hidden"
-          aria-label="Siguiente"
-          style={{ right: 12 }}
-        >
-          <svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="#333" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        </button>
+          )
+        })}
       </div>
-      <div className="text-base font-semibold text-gray-800 tracking-wide mt-2 mb-1 text-center" style={{letterSpacing:1}}>
-        {skills[current].name}
-      </div>
-      <div className="flex gap-2 justify-center mt-1">
-        {skills.map((_, idx) => (
-          <span key={idx} className={`w-2 h-2 rounded-full ${idx === current ? 'bg-gray-800' : 'bg-gray-300'} transition-all`} />
+
+      {/* Indicadores de progreso mejorados */}
+      <div className="flex items-center gap-3 mt-4">
+        {skills.map((_, index) => (
+          <motion.button
+            key={index}
+            className={`rounded-full transition-all duration-300 ${
+              index === currentIndex ? "bg-gray-800 w-8 h-3" : "bg-gray-300 w-3 h-3 hover:bg-gray-400"
+            }`}
+            onClick={() => goToSlide(index)}
+            whileTap={{ scale: 0.9 }}
+            animate={{
+              width: index === currentIndex ? 32 : 12,
+              backgroundColor: index === currentIndex ? "#1f2937" : "#d1d5db",
+            }}
+            transition={{ duration: 0.3 }}
+          />
         ))}
       </div>
-     
+
+      {/* Instrucciones de swipe */}
+      <motion.div
+        className="text-sm text-gray-500 text-center mt-2 flex items-center gap-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M8 12h8m-4-4l4 4-4 4"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        Desliza para explorar
+      </motion.div>
     </div>
-  );
+  )
 }
 
 export default function AppleStyleSkills() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f5f5f7] to-[#e3e3e6] px-2">
-      {/* Mobile: pasarela horizontal de 3 íconos */}
-      <div className="block sm:hidden w-full max-w-xs mx-auto">
-        <TVIconCarouselMobile skills={skills} />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f5f5f7] via-[#e8e8ed] to-[#d1d1d6] px-4 py-8">
+      {/* Mobile: carrusel swipeable mejorado */}
+      <div className="block sm:hidden w-full">
+        <SwipeableCarousel skills={skills} />
       </div>
+
       {/* Desktop: grid animada */}
       <motion.div
-        className="hidden sm:block w-full max-w-5xl"
+        className="hidden sm:block w-full max-w-6xl"
         initial="hidden"
         animate="visible"
         variants={{
           hidden: {},
           visible: {
             transition: {
-              staggerChildren: 0.12,
+              staggerChildren: 0.1,
             },
           },
         }}
       >
-        <div
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10 p-4 sm:p-6 md:p-8 rounded-3xl bg-white/60 shadow-xl backdrop-blur-md"
-        >
+        <h2 className="text-6xl font-extrabold mb-12 tracking-tight text-center bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">
+          SKILLS
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-8 rounded-3xl bg-white/70 shadow-2xl backdrop-blur-xl border border-white/20">
           {skills.map((skill, idx) => (
             <motion.div
               key={skill.name}
               variants={{
-                hidden: { opacity: 0, y: 40, scale: 0.95 },
-                visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 80, damping: 14 } },
+                hidden: { opacity: 0, y: 60, scale: 0.8 },
+                visible: {
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                  transition: {
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 15,
+                    delay: idx * 0.1,
+                  },
+                },
               }}
+              whileHover={{ scale: 1.12, transition: { duration: 0.3, type: "spring", stiffness: 120 } }}
             >
-              <MetallicIconCard skill={skill} />
+              <MetallicIconCard skill={skill} isActive={true} />
             </motion.div>
           ))}
         </div>
       </motion.div>
     </div>
-  );
+  )
 }
-
-/*
-Agrega esto a tu CSS global si no tienes la clase scrollbar-hide:
-.custom-scroll-hide::-webkit-scrollbar { display: none; }
-.custom-scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
-*/
