@@ -31,9 +31,9 @@ export default function Sidebar() {
           <VisuallyHidden>
             <DialogTitle>navegation</DialogTitle>
           </VisuallyHidden>
-          <div className="flex items-center">
-            <h2 className="text-xl font-bold mb-6">BootsDev</h2>
-            <h2 className="text-xl font-bold mb-6 text-red-500">-X</h2>
+          <div className="flex justify-center items-center">
+            <h2 className="text-2xl  font-bold mb-6">BootsDev</h2>
+            <h2 className="text-2xl font-bold mb-6 text-red-500">-X</h2>
           </div>
           <nav className="space-y-2">
             {navItems.map(({ name, href, icon: Icon }) => (

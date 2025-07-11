@@ -1,7 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
-import React from "react";
-
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   SiHtml5,
@@ -31,116 +29,116 @@ const TechIcons = {
   GitHub: SiGithub,
 };
 
-const skills = [
+const skills: Skill[] = [
   {
-    id: "html",
     icon: "HTML",
     color: "#E34F26",
+    name: "HTML5",
     category: "Frontend",
     description: "Semantic markup language for structuring web content",
-    proficiency: 95,
-    experience: "5+ years",
     projects: 50,
+    frameworks: ["React", "Vue", "Angular"],
+    useCases: ["Landing Pages", "Web Apps", "Email Templates"],
   },
   {
-    id: "css",
     icon: "CSS",
     color: "#1572B6",
+    name: "CSS3",
     category: "Frontend",
     description: "Advanced styling with animations, grid, and flexbox",
-    proficiency: 92,
-    experience: "5+ years",
     projects: 45,
+    frameworks: ["Tailwind", "Bootstrap", "Styled Components"],
+    useCases: ["Responsive Design", "Animations", "UI Components"],
   },
   {
-    id: "javascript",
     icon: "JavaScript",
     color: "#F7DF1E",
+    name: "JavaScript",
     category: "Programming",
     description: "Modern ES6+ features, async/await, and DOM manipulation",
-    proficiency: 90,
-    experience: "4+ years",
     projects: 40,
+    frameworks: ["Node.js", "Express", "Vanilla JS"],
+    useCases: ["Web Development", "API Integration", "Interactive UIs"],
   },
   {
-    id: "typescript",
     icon: "TypeScript",
     color: "#3178C6",
+    name: "TypeScript",
     category: "Programming",
     description: "Type-safe JavaScript with advanced type system",
-    proficiency: 88,
-    experience: "3+ years",
     projects: 35,
+    frameworks: ["Angular", "React", "Node.js"],
+    useCases: ["Large Applications", "Team Projects", "API Development"],
   },
   {
-    id: "react",
     icon: "React",
     color: "#61DAFB",
+    name: "React",
     category: "Framework",
     description: "Component-based UI library with hooks and context",
-    proficiency: 93,
-    experience: "4+ years",
     projects: 42,
+    frameworks: ["Next.js", "Gatsby", "React Native"],
+    useCases: ["SPAs", "Mobile Apps", "Dashboard Development"],
   },
   {
-    id: "nextjs",
     icon: "NextJS",
     color: "#000000",
+    name: "Next.js",
     category: "Framework",
     description: "Full-stack React framework with SSR and API routes",
-    proficiency: 89,
-    experience: "3+ years",
     projects: 28,
+    frameworks: ["Vercel", "React", "TypeScript"],
+    useCases: ["E-commerce", "Blogs", "Full-stack Apps"],
   },
   {
-    id: "dotnet",
     icon: "DotNet",
     color: "#512BD4",
+    name: ".NET",
     category: "Backend",
     description: "Cross-platform framework for web APIs and services",
-    proficiency: 85,
-    experience: "3+ years",
     projects: 25,
+    frameworks: ["ASP.NET Core", "Entity Framework", "Blazor"],
+    useCases: ["Web APIs", "Microservices", "Enterprise Apps"],
   },
   {
-    id: "postgresql",
     icon: "PostgreSQL",
     color: "#336791",
+    name: "PostgreSQL",
     category: "Database",
     description: "Advanced relational database with JSON support",
-    proficiency: 82,
-    experience: "2+ years",
     projects: 20,
+    frameworks: ["Prisma", "Sequelize", "TypeORM"],
+    useCases: ["Data Analytics", "Web Applications", "APIs"],
   },
   {
-    id: "sql",
     icon: "SQL",
     color: "#4479A1",
+    name: "MySQL",
     category: "Database",
     description: "Relational database management and optimization",
-    proficiency: 80,
-    experience: "3+ years",
     projects: 22,
+    frameworks: ["Laravel", "Django", "Node.js"],
+    useCases: ["E-commerce", "Content Management", "Analytics"],
   },
   {
-    id: "git",
     icon: "Git",
     color: "#F05032",
+    name: "Git",
     category: "Tools",
     description: "Version control with branching and collaboration",
-    proficiency: 91,
-    experience: "4+ years",
     projects: 60,
+    frameworks: ["GitHub", "GitLab", "Bitbucket"],
+    useCases: ["Team Collaboration", "Code Management", "CI/CD"],
   },
   {
-    id: "github",
     icon: "GitHub",
     color: "#181717",
+    name: "GitHub",
     category: "Platform",
     description: "Code hosting, CI/CD, and project management",
-    proficiency: 87,
-    experience: "4+ years",
     projects: 55,
+    frameworks: ["Actions", "Pages", "Copilot"],
+    useCases: ["Open Source", "Team Projects", "Portfolio"],
   },
 ];
 
@@ -162,29 +160,28 @@ const useTypewriter = (text: string, speed = 100) => {
   return displayText;
 };
 
-// Matrix Rain Effect Component
-const MatrixRain = () => {
+// Metallic Matrix Rain Effect
+const MetallicMatrixRain = () => {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?";
 
-  // Evitar window en SSR
-  const [height, setHeight] = useState(1000);
-  useEffect(() => {
-    setHeight(window.innerHeight);
-  }, []);
-
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(50)].map((_, i) => (
+      {[...Array(60)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute text-green-400 font-mono text-xs opacity-20"
+          className="absolute font-mono text-xs"
           style={{
             left: `${Math.random() * 100}%`,
             top: `-20px`,
+            background: "linear-gradient(180deg, #ffffff, #c0c0c0, #808080)",
+            backgroundClip: "text",
+            WebkitBackgroundClip: "text",
+            color: "transparent",
+            filter: "drop-shadow(0 0 2px rgba(255,255,255,0.3))",
           }}
           animate={{
-            y: [0, height + 100],
+            y: [0, window.innerHeight + 100],
             opacity: [0, 0.8, 0],
           }}
           transition={{
@@ -205,8 +202,68 @@ const MatrixRain = () => {
   );
 };
 
-// Glitch Text Component
-const GlitchText = ({
+// Liquid Metal Background Effect
+const LiquidMetalBackground = () => {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Floating Metallic Orbs */}
+      {[...Array(8)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute rounded-full"
+          style={{
+            width: `${100 + Math.random() * 200}px`,
+            height: `${100 + Math.random() * 200}px`,
+            background:
+              "radial-gradient(circle at 30% 30%, #ffffff, #e0e0e0, #a0a0a0, #606060)",
+            filter: "blur(40px)",
+            left: `${Math.random() * 100}%`,
+            top: `${Math.random() * 100}%`,
+          }}
+          animate={{
+            x: [0, Math.random() * 400 - 200, 0],
+            y: [0, Math.random() * 400 - 200, 0],
+            scale: [1, 1.5, 1],
+            opacity: [0.1, 0.3, 0.1],
+          }}
+          transition={{
+            duration: 15 + Math.random() * 10,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "easeInOut",
+            delay: i * 2,
+          }}
+        />
+      ))}
+
+      {/* Chrome Reflection Waves */}
+      {[...Array(5)].map((_, i) => (
+        <motion.div
+          key={`wave-${i}`}
+          className="absolute w-full h-px"
+          style={{
+            top: `${20 + i * 15}%`,
+            background:
+              "linear-gradient(90deg, transparent, #ffffff, #c0c0c0, #ffffff, transparent)",
+            filter: "blur(1px)",
+          }}
+          animate={{
+            x: ["-100%", "100%"],
+            opacity: [0, 1, 0],
+          }}
+          transition={{
+            duration: 8,
+            repeat: Number.POSITIVE_INFINITY,
+            delay: i * 1.5,
+            ease: "linear",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// Glitch Text Component with Metallic Effect
+const MetallicGlitchText = ({
   children,
   className = "",
 }: {
@@ -215,9 +272,27 @@ const GlitchText = ({
 }) => {
   return (
     <div className={`relative ${className}`}>
-      <span className="relative z-10">{children}</span>
+      <span
+        className="relative z-10"
+        style={{
+          background:
+            "linear-gradient(135deg, #ffffff, #e0e0e0, #c0c0c0, #a0a0a0)",
+          backgroundClip: "text",
+          WebkitBackgroundClip: "text",
+          color: "transparent",
+          filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.3))",
+        }}
+      >
+        {children}
+      </span>
       <motion.span
-        className="absolute top-0 left-0 text-red-500 opacity-70"
+        className="absolute top-0 left-0 opacity-70"
+        style={{
+          background: "linear-gradient(135deg, #c0c0c0, #808080)",
+          backgroundClip: "text",
+          WebkitBackgroundClip: "text",
+          color: "transparent",
+        }}
         animate={{
           x: [0, -2, 2, 0],
           y: [0, 1, -1, 0],
@@ -231,7 +306,13 @@ const GlitchText = ({
         {children}
       </motion.span>
       <motion.span
-        className="absolute top-0 left-0 text-blue-500 opacity-70"
+        className="absolute top-0 left-0 opacity-50"
+        style={{
+          background: "linear-gradient(135deg, #808080, #404040)",
+          backgroundClip: "text",
+          WebkitBackgroundClip: "text",
+          color: "transparent",
+        }}
         animate={{
           x: [0, 2, -2, 0],
           y: [0, -1, 1, 0],
@@ -248,63 +329,30 @@ const GlitchText = ({
   );
 };
 
-// Hologram Scanner Effect
-const HologramScanner = () => {
-  return (
-    <motion.div
-      className="absolute inset-0 pointer-events-none"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 2 }}
-    >
-      {/* Horizontal scan lines */}
-      {[...Array(8)].map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute w-full h-px bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-30"
-          style={{ top: `${12.5 * (i + 1)}%` }}
-          animate={{
-            scaleX: [0, 1, 0],
-            opacity: [0, 0.6, 0],
-          }}
-          transition={{
-            duration: 2,
-            delay: i * 0.2,
-            repeat: Number.POSITIVE_INFINITY,
-            repeatDelay: 3,
-          }}
-        />
-      ))}
-      {/* Vertical scan line */}
-      <motion.div
-        className="absolute top-0 w-px h-full bg-gradient-to-b from-transparent via-cyan-400 to-transparent opacity-50"
-        animate={{
-          left: ["0%", "100%"],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: "linear",
-        }}
-      />
-    </motion.div>
-  );
-};
+interface Skill {
+  icon: keyof typeof TechIcons;
+  color: string;
+  name: string;
+  category: string;
+  description: string;
+  projects: number;
+  frameworks: string[];
+  useCases: string[];
+}
 
-// Define Skill type based on your skills array
-type Skill = typeof skills[number];
+interface TooltipPosition {
+  x: number;
+  y: number;
+}
 
-// Asegura que icon sea keyof typeof TechIcons
-type SkillWithIcon = Omit<Skill, "icon"> & { icon: keyof typeof TechIcons };
-
-// Cambia el tipo de TooltipProps y IconCardProps para usar SkillWithIcon
-type TooltipProps = {
-  skill: SkillWithIcon;
+interface SimpleTooltipProps {
+  skill: Skill;
   isVisible: boolean;
-  position: { x: number; y: number };
-};
-const SkillTooltip = ({ skill, isVisible, position }: TooltipProps) => {
-  const color = skill.color || "#000000";
+  position: TooltipPosition;
+}
+
+// Simple Name Tooltip
+const SimpleTooltip = ({ skill, isVisible, position }: SimpleTooltipProps) => {
   return (
     <AnimatePresence>
       {isVisible && (
@@ -312,116 +360,55 @@ const SkillTooltip = ({ skill, isVisible, position }: TooltipProps) => {
           className="fixed z-50 pointer-events-none"
           style={{
             left: position.x,
-            top: position.y,
-            transform: "translate(-50%, -120%)",
+            top: position.y - 60,
+            transform: "translateX(-50%)",
           }}
-          initial={{ opacity: 0, scale: 0.8, y: 20 }}
+          initial={{ opacity: 0, scale: 0.8, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.8, y: 20 }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
+          exit={{ opacity: 0, scale: 0.8, y: 10 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
         >
           <div className="relative">
+            {/* Metallic Glow */}
             <div
-              className="absolute inset-0 rounded-2xl blur-xl opacity-60"
+              className="absolute inset-0 rounded-xl blur-lg opacity-60"
               style={{
-                background: `linear-gradient(135deg, ${color}66, ${color}33)`,
-                transform: "scale(1.1)",
+                background:
+                  "radial-gradient(ellipse, #ffffff, #c0c0c0, transparent)",
+                transform: "scale(1.2)",
               }}
             />
+            {/* Tooltip Content */}
             <div
-              className="relative bg-white/95 backdrop-blur-md rounded-2xl p-6 shadow-2xl border-2 min-w-80"
-              style={{ borderColor: `${color}66` }}
+              className="relative px-4 py-2 rounded-xl border backdrop-blur-md"
+              style={{
+                background:
+                  "linear-gradient(135deg, rgba(255,255,255,0.9), rgba(224,224,224,0.8), rgba(192,192,192,0.7))",
+                borderColor: "rgba(255,255,255,0.3)",
+                boxShadow:
+                  "0 8px 32px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5)",
+              }}
             >
-              {/* Header */}
-              <div className="flex items-center gap-4 mb-4">
-                <div
-                  className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
-                  style={{
-                    backgroundColor: `${color}15`,
-                    border: `2px solid ${color}30`,
-                  }}
-                >
-                  {React.createElement(TechIcons[skill.icon], {
-                    size: 24,
-                    color: skill.color,
-                  })}
-                </div>
-                <div>
-                  {/* No mostrar nombre */}
-                  <span className="text-sm text-gray-500 font-medium">
-                    {skill.category}
-                  </span>
-                </div>
-              </div>
-
-              {/* Description */}
-              <p className="text-gray-700 text-sm mb-4 leading-relaxed">
-                {skill.description}
-              </p>
-
-              {/* Stats Grid */}
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-800">
-                    {skill.proficiency}%
-                  </div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wide">
-                    Proficiency
-                  </div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-gray-800">
-                    {skill.projects}
-                  </div>
-                  <div className="text-xs text-gray-500 uppercase tracking-wide">
-                    Projects
-                  </div>
-                </div>
-              </div>
-
-              {/* Proficiency Bar */}
-              <div className="mb-4">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-xs font-medium text-gray-600">
-                    Skill Level
-                  </span>
-                  <span className="text-xs text-gray-500">
-                    {skill.experience}
-                  </span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                  <motion.div
-                    className="h-full rounded-full"
-                    style={{
-                      background: `linear-gradient(90deg, ${skill.color}, ${skill.color}80)`,
-                    }}
-                    initial={{ width: 0 }}
-                    animate={{ width: `${skill.proficiency}%` }}
-                    transition={{ duration: 1, ease: "easeOut" }}
-                  />
-                </div>
-              </div>
-
-              {/* Experience Badge */}
-              <div className="flex justify-center">
-                <div
-                  className="px-3 py-1 rounded-full text-xs font-medium"
-                  style={{
-                    backgroundColor: `${color}15`,
-                    color: color,
-                    border: `1px solid ${color}33`,
-                  }}
-                >
-                  {skill.experience} Experience
-                </div>
-              </div>
+              <span
+                className="text-sm font-semibold whitespace-nowrap"
+                style={{
+                  background: "linear-gradient(135deg, #2a2a2a, #1a1a1a)",
+                  backgroundClip: "text",
+                  WebkitBackgroundClip: "text",
+                  color: "transparent",
+                }}
+              >
+                {skill.name}
+              </span>
             </div>
+            {/* Arrow */}
             <div
               className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0"
               style={{
-                borderLeft: "8px solid transparent",
-                borderRight: "8px solid transparent",
-                borderTop: `8px solid ${color}66`,
+                borderLeft: "6px solid transparent",
+                borderRight: "6px solid transparent",
+                borderTop: "6px solid rgba(255,255,255,0.9)",
+                filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))",
               }}
             />
           </div>
@@ -431,18 +418,33 @@ const SkillTooltip = ({ skill, isVisible, position }: TooltipProps) => {
   );
 };
 
-// Enhanced Icon Card Component
-type IconCardProps = {
-  skill: SkillWithIcon;
+interface Skill {
+  icon: keyof typeof TechIcons;
+  color: string;
+  name: string;
+  category: string;
+  description: string;
+  projects: number;
+  frameworks: string[];
+  useCases: string[];
+}
+
+interface MetallicIconCardProps {
+  skill: Skill;
   index: number;
   showContent: boolean;
-};
-const IconCard = ({ skill, index, showContent }: IconCardProps) => {
+}
+
+// Enhanced Metallic Icon Card
+const MetallicIconCard = ({
+  skill,
+  index,
+  showContent,
+}: MetallicIconCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const IconComponent = TechIcons[skill.icon];
 
-  // Tipar correctamente los eventos del mouse
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     setIsHovered(true);
     setMousePosition({ x: e.clientX, y: e.clientY });
@@ -462,108 +464,196 @@ const IconCard = ({ skill, index, showContent }: IconCardProps) => {
     <>
       <motion.div
         className="relative group cursor-pointer"
-        initial={{ opacity: 0, scale: 0, rotateY: -180 }}
-        animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+        initial={{ opacity: 0, scale: 0, y: 100 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{
-          duration: 1.2,
-          delay: index * 0.15,
+          duration: 0.8,
+          delay: index * 0.1,
           type: "spring",
-          stiffness: 100,
+          stiffness: 120,
+          damping: 12,
         }}
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        whileHover={{ scale: 1.1, z: 50 }}
+        whileHover={{
+          scale: 1.1,
+          y: -12,
+          transition: { duration: 0.4, ease: "easeOut" },
+        }}
+        whileTap={{ scale: 0.95 }}
       >
-        {/* Outer Glow Ring */}
+        {/* Metallic Aura Effect */}
         <motion.div
-          className="absolute inset-0 rounded-full opacity-0"
+          className="absolute inset-0 rounded-3xl opacity-0"
           style={{
-            background: `radial-gradient(circle, ${skill.color}40 0%, transparent 70%)`,
-            filter: "blur(20px)",
+            background:
+              "radial-gradient(circle at center, rgba(255,255,255,0.4) 0%, rgba(192,192,192,0.2) 50%, transparent 100%)",
+            filter: "blur(30px)",
           }}
           animate={{
             opacity: isHovered ? 1 : 0,
-            scale: isHovered ? 1.8 : 1,
+            scale: isHovered ? 1.6 : 1,
           }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
         />
 
-        {/* Multiple Pulse Rings */}
-        {[...Array(4)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute inset-0 rounded-full border-2 opacity-0"
-            style={{ borderColor: skill.color }}
-            animate={{
-              opacity: isHovered ? [0, 0.8, 0] : 0,
-              scale: isHovered ? [1, 2.5 + i * 0.5] : 1,
-            }}
-            transition={{
+        {/* Chrome Reflection Ring */}
+        <motion.div
+          className="absolute inset-0 rounded-3xl"
+          style={{
+            background:
+              "conic-gradient(from 0deg, #ffffff, #e0e0e0, #c0c0c0, #a0a0a0, #ffffff)",
+            padding: "2px",
+          }}
+          animate={{
+            rotate: isHovered ? [0, 360] : 0,
+            opacity: isHovered ? 0.6 : 0,
+          }}
+          transition={{
+            rotate: {
               duration: 2,
-              delay: i * 0.3,
-              repeat: isHovered ? Number.POSITIVE_INFINITY : 0,
-              ease: "easeOut",
-            }}
-          />
-        ))}
+              ease: "linear",
+              repeat: Number.POSITIVE_INFINITY,
+            },
+            opacity: { duration: 0.3 },
+          }}
+        >
+          <div className="w-full h-full rounded-3xl bg-white" />
+        </motion.div>
 
         {/* Main Icon Container */}
         <motion.div
-          className="relative w-32 h-32 bg-white rounded-full border-4 border-gray-200 flex items-center justify-center overflow-hidden shadow-2xl"
+          className="relative w-28 h-28 rounded-3xl overflow-hidden"
+          style={{
+            background:
+              "linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,240,240,0.9), rgba(220,220,220,0.85))",
+            backdropFilter: "blur(20px)",
+            border: "1px solid rgba(255, 255, 255, 0.3)",
+          }}
           animate={{
-            borderColor: isHovered ? skill.color : "#e5e7eb",
-            backgroundColor: isHovered ? `${skill.color}08` : "#ffffff",
             boxShadow: isHovered
-              ? `0 0 60px ${skill.color}60, 0 0 100px ${skill.color}40, inset 0 0 20px ${skill.color}20`
-              : "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+              ? [
+                  "0 20px 60px rgba(0, 0, 0, 0.15)",
+                  "0 25px 80px rgba(255, 255, 255, 0.2)",
+                  "inset 0 1px 0 rgba(255, 255, 255, 0.8)",
+                ].join(", ")
+              : [
+                  "0 8px 25px rgba(0, 0, 0, 0.08)",
+                  "0 12px 35px rgba(0, 0, 0, 0.06)",
+                  "inset 0 1px 0 rgba(255, 255, 255, 0.6)",
+                ].join(", "),
           }}
           transition={{ duration: 0.4 }}
         >
-          {/* Icon with Advanced Effects */}
+          {/* Chrome Gradient Overlay */}
+          <div
+            className="absolute inset-0 rounded-3xl"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.4) 100%)",
+            }}
+          />
+
+          {/* Liquid Metal Reflection */}
           <motion.div
-            className="relative w-16 h-16 z-10 flex items-center justify-center"
-            style={{ color: skill.color }}
+            className="absolute inset-0 rounded-3xl opacity-0"
+            style={{
+              background:
+                "linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.8) 50%, transparent 70%)",
+            }}
             animate={{
-              scale: isHovered ? [1, 1.3, 1.1] : 1,
-              rotateY: isHovered ? [0, 360] : 0,
-              filter: isHovered
-                ? `drop-shadow(0 0 20px ${skill.color}) brightness(1.2) saturate(1.3)`
-                : "none",
+              opacity: isHovered ? [0, 1, 0] : 0,
+              x: isHovered ? ["-100%", "100%"] : "0%",
             }}
             transition={{
-              scale: { duration: 0.6 },
-              rotateY: { duration: 1.5, ease: "easeInOut" },
-              filter: { duration: 0.4 },
+              duration: 1.5,
+              ease: "easeInOut",
             }}
+          />
+
+          {/* Icon Container */}
+          <motion.div
+            className="relative w-full h-full flex items-center justify-center z-10"
+            animate={{
+              scale: isHovered ? 1.15 : 1,
+            }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
           >
-            <IconComponent size="100%" />
+            <motion.div
+              className="w-12 h-12 flex items-center justify-center"
+              style={{
+                color: skill.color,
+                filter: `drop-shadow(0 4px 12px ${skill.color}40) contrast(1.2) saturate(1.1)`,
+              }}
+              animate={{
+                filter: isHovered
+                  ? `drop-shadow(0 6px 20px ${skill.color}60) contrast(1.4) saturate(1.3) brightness(1.1)`
+                  : `drop-shadow(0 4px 12px ${skill.color}40) contrast(1.2) saturate(1.1)`,
+                rotateY: isHovered ? [0, 10, -10, 0] : 0,
+              }}
+              transition={{
+                filter: { duration: 0.4 },
+                rotateY: { duration: 0.8, ease: "easeInOut" },
+              }}
+            >
+              <IconComponent size="100%" />
+            </motion.div>
           </motion.div>
+
+          {/* Metallic Particles */}
+          <AnimatePresence>
+            {isHovered && (
+              <>
+                {[...Array(12)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-1 h-1 rounded-full"
+                    style={{
+                      background: "radial-gradient(circle, #ffffff, #c0c0c0)",
+                      left: `${20 + Math.random() * 60}%`,
+                      top: `${20 + Math.random() * 60}%`,
+                      boxShadow: "0 0 4px rgba(255,255,255,0.8)",
+                    }}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{
+                      opacity: [0, 1, 0],
+                      scale: [0, 2, 0],
+                      y: [0, -30 - Math.random() * 20],
+                      x: [0, (Math.random() - 0.5) * 40],
+                    }}
+                    exit={{ opacity: 0 }}
+                    transition={{
+                      duration: 2,
+                      delay: i * 0.1,
+                      ease: "easeOut",
+                    }}
+                  />
+                ))}
+              </>
+            )}
+          </AnimatePresence>
         </motion.div>
 
-        {/* Skill Name (NO mostrar) */}
-        {/* <motion.div
-          className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.15 + 0.5, duration: 0.6 }}
-        >
-          <motion.h3
-            className="text-lg font-bold whitespace-nowrap"
-            animate={{
-              color: isHovered ? skill.color : "#000000",
-              scale: isHovered ? 1.1 : 1,
-              textShadow: isHovered ? `0 0 10px ${skill.color}60` : "none",
-            }}
-            transition={{ duration: 0.3 }}
-          >
-            {skill.name}
-          </motion.h3>
-        </motion.div> */}
+        {/* Chrome Reflection Base */}
+        <motion.div
+          className="absolute top-full left-1/2 transform -translate-x-1/2 w-28 h-14 rounded-3xl"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(255,255,255,0.15) 0%, transparent 100%)",
+            filter: "blur(12px)",
+            transform: "translateX(-50%) scaleY(-0.4)",
+          }}
+          animate={{
+            opacity: isHovered ? 0.8 : 0.4,
+            scaleX: isHovered ? 1.2 : 1,
+          }}
+          transition={{ duration: 0.4 }}
+        />
       </motion.div>
 
-      {/* Professional Tooltip */}
-      <SkillTooltip
+      {/* Simple Name Tooltip */}
+      <SimpleTooltip
         skill={skill}
         isVisible={isHovered}
         position={mousePosition}
@@ -572,177 +662,191 @@ const IconCard = ({ skill, index, showContent }: IconCardProps) => {
   );
 };
 
-export default function EnhancedSkillsPage() {
+// Fondo Grid Animado Blanco
+const GridBackground = () => (
+  <div className="absolute inset-0 z-0 pointer-events-none">
+    {/* Líneas verticales */}
+    {[...Array(20)].map((_, i) => (
+      <motion.div
+        key={`v-${i}`}
+        className="absolute top-0 h-full"
+        style={{
+          left: `${i * 5}%`,
+          width: "1px",
+          background:
+            "linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.32), rgba(255,255,255,0.12))",
+        }}
+        initial={{ opacity: 0.5 }}
+        animate={{ opacity: [0.5, 0.8, 0.5] }}
+        transition={{
+          duration: 4 + Math.random() * 2,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+          delay: i * 0.2,
+        }}
+      />
+    ))}
+    {/* Líneas horizontales */}
+    {[...Array(16)].map((_, i) => (
+      <motion.div
+        key={`h-${i}`}
+        className="absolute left-0 w-full"
+        style={{
+          top: `${i * 6.25}%`,
+          height: "1px",
+          background:
+            "linear-gradient(90deg, rgba(255,255,255,0.10), rgba(255,255,255,0.28), rgba(255,255,255,0.10))",
+        }}
+        initial={{ opacity: 0.5 }}
+        animate={{ opacity: [0.5, 0.7, 0.5] }}
+        transition={{
+          duration: 5 + Math.random() * 2,
+          repeat: Number.POSITIVE_INFINITY,
+          ease: "easeInOut",
+          delay: i * 0.15,
+        }}
+      />
+    ))}
+    {/* Sutil resplandor blanco */}
+    <div className="absolute inset-0 bg-white opacity-10 pointer-events-none" />
+  </div>
+);
+
+// interface
+
+export default function MetallicSkillsShowcase() {
   const [mounted, setMounted] = useState(false);
   const [showPreloader, setShowPreloader] = useState(true);
   const [showContent, setShowContent] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const headerRef = useRef<HTMLDivElement>(null);
 
   // Typewriter texts
   const mainTitle = useTypewriter("SKILLS", 150);
   const subtitle = useTypewriter("TECHNOLOGIES THAT POWER INNOVATION", 80);
-  const loadingText = useTypewriter("INITIALIZING SYSTEMS...", 100);
+  const loadingText = useTypewriter("INITIALIZING METALLIC INTERFACE...", 100);
 
   useEffect(() => {
     setMounted(true);
-    // Hide preloader after 8 seconds
     const timer = setTimeout(() => {
       setShowPreloader(false);
-      // Show content after preloader animation completes
       setTimeout(() => {
         setShowContent(true);
       }, 1000);
     }, 8000);
-
     return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 120) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   if (!mounted) return null;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 overflow-hidden relative">
-      {/* Enhanced Cinematic Preloader */}
+    <div className="min-h-screen overflow-x-hidden relative ">
+      {/* Fondo Grid Blanco */}
+      <GridBackground />
+
+      {/* Liquid Metal Background */}
+      <LiquidMetalBackground />
+
+      {/* Enhanced Metallic Preloader */}
       <AnimatePresence>
         {showPreloader && (
           <motion.div
-            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gradient-to-br from-black via-gray-900 to-black overflow-hidden"
+            className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden"
+            style={{
+              background: "linear-gradient(135deg, #1a1a1a, #2a2a2a, #1a1a1a)",
+            }}
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
           >
-            {/* Matrix Rain Background */}
-            <MatrixRain />
-            {/* Hologram Scanner */}
-            <HologramScanner />
-            {/* Cinematic Bars */}
-            <motion.div
-              className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-black to-transparent z-30"
-              initial={{ y: -100 }}
-              animate={{ y: 0 }}
-              exit={{ y: -100 }}
-              transition={{ duration: 1, ease: "easeInOut" }}
-            />
-            <motion.div
-              className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-black to-transparent z-30"
-              initial={{ y: 100 }}
-              animate={{ y: 0 }}
-              exit={{ y: 100 }}
-              transition={{ duration: 1, ease: "easeInOut" }}
-            />
+            {/* Metallic Matrix Rain */}
+            <MetallicMatrixRain />
 
-            {/* Advanced Particle System */}
+            {/* Chrome Scan Lines */}
             <motion.div
               className="absolute inset-0 z-10 pointer-events-none"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 1 }}
+              transition={{ delay: 1, duration: 1 }}
             >
-              {/* Floating Code Fragments */}
-              {[...Array(30)].map((_, i) => (
+              {[...Array(12)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute text-green-400 font-mono text-xs opacity-30"
+                  className="absolute w-full h-px"
                   style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
+                    top: `${8.33 * (i + 1)}%`,
+                    background:
+                      "linear-gradient(90deg, transparent, #ffffff, #c0c0c0, #ffffff, transparent)",
                   }}
                   animate={{
-                    y: [0, -50, 0],
-                    x: [0, Math.random() * 100 - 50, 0],
-                    opacity: [0.1, 0.6, 0.1],
-                    rotate: [0, 360],
-                  }}
-                  transition={{
-                    duration: 8 + Math.random() * 4,
-                    repeat: Number.POSITIVE_INFINITY,
-                    delay: i * 0.2,
-                  }}
-                >
-                  {`{${Math.random() > 0.5 ? "code" : "dev"}}`}
-                </motion.div>
-              ))}
-              {/* Energy Orbs */}
-              {[...Array(15)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute w-2 h-2 rounded-full bg-cyan-400 opacity-60"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    top: `${Math.random() * 100}%`,
-                    filter: "blur(1px)",
-                    boxShadow: "0 0 20px #22d3ee",
-                  }}
-                  animate={{
-                    scale: [0, 2, 0],
+                    scaleX: [0, 1, 0],
                     opacity: [0, 0.8, 0],
-                    x: [0, Math.random() * 200 - 100],
-                    y: [0, Math.random() * 200 - 100],
                   }}
                   transition={{
-                    duration: 4 + Math.random() * 3,
+                    duration: 2.5,
+                    delay: i * 0.15,
                     repeat: Number.POSITIVE_INFINITY,
-                    delay: i * 0.3,
+                    repeatDelay: 4,
                   }}
                 />
               ))}
-              {/* Central Hologram Effect */}
-              <motion.div
-                className="absolute left-1/2 top-1/2 w-96 h-96 rounded-full pointer-events-none"
-                style={{
-                  transform: "translate(-50%, -50%)",
-                  background:
-                    "conic-gradient(from 0deg, #00ffff, #ff00ff, #ffff00, #00ffff)",
-                  filter: "blur(60px)",
-                  opacity: 0.15,
-                }}
-                animate={{
-                  rotate: [0, 360],
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  rotate: {
-                    duration: 10,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "linear",
-                  },
-                  scale: {
-                    duration: 4,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: "easeInOut",
-                  },
-                }}
-              />
             </motion.div>
 
             {/* Main Content */}
             <div className="text-center z-40 relative">
-              {/* Glitch Title */}
               <motion.div
                 className="mb-8"
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 1.5, ease: "easeOut" }}
               >
-                <GlitchText className="text-8xl md:text-9xl font-black text-white drop-shadow-2xl">
+                <MetallicGlitchText className="text-8xl md:text-9xl font-black drop-shadow-2xl">
                   {mainTitle}
-                </GlitchText>
+                </MetallicGlitchText>
                 <motion.div
-                  className="w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent mt-4"
+                  className="w-full h-1 mt-4"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, transparent, #ffffff, #c0c0c0, #ffffff, transparent)",
+                  }}
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ delay: 2, duration: 1.5 }}
                 />
               </motion.div>
-              {/* Typewriter Subtitle */}
+
               <motion.div
                 className="mb-12"
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 3, duration: 1 }}
               >
-                <p className="text-2xl md:text-3xl text-cyan-300 font-light tracking-wider">
+                <p
+                  className="text-2xl md:text-3xl font-light tracking-wider"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #e0e0e0, #c0c0c0, #a0a0a0)",
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    color: "transparent",
+                  }}
+                >
                   {subtitle}
                   <motion.span
-                    className="inline-block w-1 h-8 bg-cyan-400 ml-1"
+                    className="inline-block w-1 h-8 ml-1"
+                    style={{ backgroundColor: "#ffffff" }}
                     animate={{ opacity: [1, 0, 1] }}
                     transition={{
                       duration: 1,
@@ -751,18 +855,26 @@ export default function EnhancedSkillsPage() {
                   />
                 </p>
               </motion.div>
-              {/* Advanced Loading Animation */}
+
               <motion.div
                 className="space-y-6"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 4, duration: 1 }}
               >
-                {/* Loading Text */}
-                <p className="text-lg text-green-400 font-mono">
+                <p
+                  className="text-lg font-mono"
+                  style={{
+                    background: "linear-gradient(135deg, #e0e0e0, #c0c0c0)",
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    color: "transparent",
+                  }}
+                >
                   {loadingText}
                   <motion.span
-                    className="inline-block w-2 h-5 bg-green-400 ml-1"
+                    className="inline-block w-2 h-5 ml-1"
+                    style={{ backgroundColor: "#ffffff" }}
                     animate={{ opacity: [1, 0, 1] }}
                     transition={{
                       duration: 0.8,
@@ -770,76 +882,63 @@ export default function EnhancedSkillsPage() {
                     }}
                   />
                 </p>
-                {/* Progress Bar */}
-                <div className="w-80 h-2 bg-gray-800 rounded-full mx-auto overflow-hidden">
+
+                {/* Metallic Progress Bar */}
+                <div
+                  className="w-80 h-3 rounded-full mx-auto overflow-hidden"
+                  style={{
+                    background: "linear-gradient(135deg, #2a2a2a, #1a1a1a)",
+                    border: "1px solid #404040",
+                  }}
+                >
                   <motion.div
-                    className="h-full bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600"
+                    className="h-full rounded-full"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, #ffffff, #e0e0e0, #c0c0c0, #ffffff)",
+                    }}
                     initial={{ width: "0%" }}
                     animate={{ width: "100%" }}
                     transition={{ delay: 4.5, duration: 3, ease: "easeInOut" }}
                   />
                 </div>
-                {/* System Status */}
-                <motion.div
-                  className="space-y-2 text-sm font-mono text-green-400"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 5, duration: 1 }}
-                >
-                  <motion.p
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 5.2 }}
-                  >
-                    {">"} Loading React components... ✓
-                  </motion.p>
-                  <motion.p
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 5.8 }}
-                  >
-                    {">"} Initializing animations... ✓
-                  </motion.p>
-                  <motion.p
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 6.4 }}
-                  >
-                    {">"} Preparing skills showcase... ✓
-                  </motion.p>
-                  <motion.p
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 7 }}
-                    className="text-cyan-400"
-                  >
-                    {">"} System ready. Launching interface...
-                  </motion.p>
-                </motion.div>
               </motion.div>
             </div>
-            {/* Corner UI Elements */}
-            <motion.div
-              className="absolute top-8 left-8 text-cyan-400 font-mono text-sm z-40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2 }}
-            >
-              <p>SYSTEM: ONLINE</p>
-              <p>STATUS: LOADING</p>
-            </motion.div>
-            <motion.div
-              className="absolute bottom-8 right-8 text-cyan-400 font-mono text-sm z-40"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 2 }}
-            >
-              <p>v2.0.1</p>
-              <p>BUILD: 2025</p>
-            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Sticky/Animated Title */}
+      <motion.div
+        className={`fixed top-0 left-0 w-full z-30 bg-transparent backdrop-blur-lg pointer-events-none`}
+        style={{ height: scrolled ? "64px" : "0px" }}
+        animate={{
+          opacity: scrolled ? 1 : 0,
+          height: scrolled ? 64 : 0,
+        }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <motion.h1
+          className="text-3xl font-black tracking-tight text-center mt-4"
+          style={{
+            background:
+              "linear-gradient(120deg, #e0e0e0 10%, #c0c0c0 30%, #a0a0a0 50%, #e0e0e0 70%, #ffffff 100%)",
+            backgroundClip: "text",
+            WebkitBackgroundClip: "text",
+            backgroundSize: "200% 100%",
+            backgroundPosition: "0% 50%",
+            transition: "font-size 0.4s",
+          }}
+        
+          transition={{
+            duration: 3,
+            repeat: Number.POSITIVE_INFINITY,
+            ease: "easeInOut",
+          }}
+        >
+          SKILLS-X
+        </motion.h1>
+      </motion.div>
 
       {/* Main Content */}
       <AnimatePresence>
@@ -847,39 +946,53 @@ export default function EnhancedSkillsPage() {
           <>
             {/* Header */}
             <motion.header
-              className="py-20 px-6 text-center relative z-10"
-              initial={{ opacity: 0, y: -100 }}
+              ref={headerRef}
+              className="py-24 px-6 text-center relative z-10"
+              initial={{ opacity: 0, y: 100 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, ease: "easeOut" }}
+              transition={{ duration: 2.5, ease: "easeInOut" }}
             >
               <motion.h1
-                className="text-8xl md:text-9xl font-black mb-8 tracking-tight"
-                initial={{ scale: 2, y: 200 }}
-                animate={{ scale: 1, y: 0 }}
-                transition={{ duration: 1.5, ease: "easeOut" }}
+                className="text-8xl md:text-9xl font-black mb-10 tracking-tight"
+                initial={{ scale: 2.8, y: 200, opacity: 0 }}
+                animate={{ scale: 1, y: 0, opacity: 1 }}
+                transition={{ duration: 3.5, ease: "easeInOut" }}
               >
                 <motion.span
-                  className="inline-block bg-gradient-to-r from-black via-gray-600 to-black bg-clip-text text-transparent"
+                  className="inline-block"
+                  style={{
+                    background:
+                      "linear-gradient(120deg, #e0e0e0 10%, #c0c0c0 30%, #a0a0a0 50%, #e0e0e0 70%, #ffffff 100%)",
+                    backgroundClip: "text",
+                    WebkitBackgroundClip: "text",
+                    color: "transparent",
+                    backgroundSize: "200% 100%",
+                    backgroundPosition: "0% 100%",
+                  }}
                   animate={{
                     backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                   }}
                   transition={{
-                    duration: 4,
+                    duration: 10,
                     repeat: Number.POSITIVE_INFINITY,
-                    ease: "linear",
-                  }}
-                  style={{
-                    backgroundSize: "200% 100%",
+                    ease: "easeInOut",
                   }}
                 >
-                  SKILLS
+                  SKILLS-X
                 </motion.span>
               </motion.h1>
+
               <motion.p
-                className="text-2xl text-gray-600 max-w-2xl mx-auto"
-                initial={{ opacity: 0, y: 100 }}
+                className="text-2xl max-w-2xl mx-auto"
+                style={{
+                  background: "linear-gradient(135deg, #606060, #404040)",
+                  backgroundClip: "text",
+                  WebkitBackgroundClip: "text",
+                  color: "transparent",
+                }}
+                initial={{ opacity: 0, y: 60 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 1 }}
+                transition={{ delay: 1.5, duration: 2, ease: "easeOut" }}
               >
                 Technologies that power innovation
               </motion.p>
@@ -895,9 +1008,9 @@ export default function EnhancedSkillsPage() {
                   transition={{ delay: 1, duration: 1.2 }}
                 >
                   {skills.map((skill, index) => (
-                    <IconCard
-                      key={skill.icon + "-" + index}
-                      skill={skill as SkillWithIcon}
+                    <MetallicIconCard
+                      key={skill.name}
+                      skill={skill}
                       index={index}
                       showContent={showContent}
                     />
