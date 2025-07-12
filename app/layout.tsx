@@ -22,8 +22,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <body className={`${onest.className}`}>
         {/* Agregar el Preloader aquí */}
 
-      
-          {/* <Preloader /> */}
+        <Preloader />
 
         {/* Sidebar */}
         <Sidebar />
