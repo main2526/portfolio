@@ -23,7 +23,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         {/* Agregar el Preloader aquí */}
 
       
-          <Preloader />
+          {/* <Preloader /> */}
 
         {/* Sidebar */}
         <Sidebar />
