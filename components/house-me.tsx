@@ -1,22 +1,25 @@
-import { Button } from "@/components/ui/button"
-import Image from "next/image"
-import "../styles/animations.css"
-import { Download, Mail, Code, Gamepad2 } from "lucide-react"
-import { CardTilt } from "@/components/card-tilt"
-import React, { useState } from "react"
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import "../styles/animations.css";
+import { Download, Mail, Code, Gamepad2 } from "lucide-react";
+import { CardTilt } from "@/components/card-tilt";
+import React, { useState } from "react";
+
 
 export default function HOUSE_COMPONENT() {
-  const [downloading, setDownloading] = useState(false)
+  const [downloading, setDownloading] = useState(false);
 
-  const handleDownloadClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  const handleDownloadClick = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
     if (downloading) {
-      e.preventDefault()
-      return
+      e.preventDefault();
+      return;
     }
-    setDownloading(true)
-    setTimeout(() => setDownloading(false), 10000)
+    setDownloading(true);
+    setTimeout(() => setDownloading(false), 10000);
     // Permite la descarga normalmente
-  }
+  };
 
   return (
     <div className="min-h-screen bg-white text-black overflow-hidden relative">
@@ -43,17 +46,24 @@ export default function HOUSE_COMPONENT() {
                 <span className="block fade-in-up bg-gradient-to-tr from-black via-blue-600 to-blue-600 bg-clip-text text-transparent">
                   Hi, I&apos;m
                 </span>
-                <span className="block sm:inline gradient-text-nextjs relative holographic-text">Johanny A. Rodriguez</span>
+                <span className="block sm:inline gradient-text-nextjs relative holographic-text">
+                  Johanny A. Rodriguez
+                </span>
               </h1>
             </div>
 
             <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed typewriter-effect">
-              I'm a passionate developer focused on creating innovative solutions. With experience in both frontend and
-              backend development, I specialize in building clean, responsive, and user-friendly applications.
+              I'm a passionate developer focused on creating innovative
+              solutions. With experience in both frontend and backend
+              development, I specialize in building clean, responsive, and
+              user-friendly applications.
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-4 pt-4">
-              <a href="mailto:johannyantoniorodriguezgmai@gmail.com" className="group">
+              <a
+                href="mailto:johannyantoniorodriguezgmai@gmail.com"
+                className="group"
+              >
                 <Button
                   variant="default"
                   className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 text-base sm:text-lg bg-black text-white hover:bg-gray-800 transition-all duration-300 transform hover:scale-105 shadow-nextjs relative overflow-hidden"
@@ -66,7 +76,9 @@ export default function HOUSE_COMPONENT() {
               <a
                 href="/cv.pdf"
                 download
-                className={`w-full sm:w-auto group${downloading ? ' pointer-events-none' : ''}`}
+                className={`w-full sm:w-auto group${
+                  downloading ? " pointer-events-none" : ""
+                }`}
                 onClick={handleDownloadClick}
                 tabIndex={downloading ? -1 : 0}
                 aria-disabled={downloading}
@@ -118,11 +130,15 @@ export default function HOUSE_COMPONENT() {
                     <div className="icon-container-nextjs">
                       <Code className="w-6 h-6 text-black" />
                     </div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-black">Frontend Developer</h3>
+                    <h3 className="text-xl sm:text-2xl font-bold text-black">
+                      Frontend Developer
+                    </h3>
                   </div>
                   <p className="text-gray-600 leading-relaxed text-sm sm:text-base">
-                    I have developed several interactive websites and applications using modern technologies like React
-                    and Tailwind CSS. My goal is to provide users with seamless, responsive, and intuitive experiences.
+                    I have developed several interactive websites and
+                    applications using modern technologies like React and
+                    Tailwind CSS. My goal is to provide users with seamless,
+                    responsive, and intuitive experiences.
                   </p>
                 </div>
                 <div className="card-hover-effect-nextjs"></div>
@@ -139,11 +155,14 @@ export default function HOUSE_COMPONENT() {
                     <div className="icon-container-nextjs-dark">
                       <Gamepad2 className="w-6 h-6 text-white" />
                     </div>
-                    <h3 className="text-xl sm:text-2xl font-bold text-white">Game Unity Developer</h3>
+                    <h3 className="text-xl sm:text-2xl font-bold text-white">
+                      Game Unity Developer
+                    </h3>
                   </div>
                   <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
-                    I specialize in building games using Unity, C#, and other related technologies. My focus is on
-                    creating immersive and engaging gaming experiences for players.
+                    I specialize in building games using Unity, C#, and other
+                    related technologies. My focus is on creating immersive and
+                    engaging gaming experiences for players.
                   </p>
                 </div>
                 <div className="card-hover-effect-nextjs-dark"></div>
@@ -163,5 +182,5 @@ export default function HOUSE_COMPONENT() {
         </div>
       </footer>
     </div>
-  )
+  );
 }

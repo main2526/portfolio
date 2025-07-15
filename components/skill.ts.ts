@@ -5,36 +5,33 @@ import {
   SiTypescript,
   SiReact,
   SiNextdotjs,
-  SiDotnet,
   SiPostgresql,
   SiMysql,
   SiGit,
+  SiPrisma,
   SiGithub,
-} from "react-icons/si"
-
+} from "react-icons/si";
+import { TbBrandCSharp } from "react-icons/tb";
 export const TechIcons = {
   HTML: SiHtml5,
   CSS: SiCss3,
   JavaScript: SiJavascript,
   TypeScript: SiTypescript,
-  React: SiReact,
-  NextJS: SiNextdotjs,
-  DotNet: SiDotnet,
+  Csharp: TbBrandCSharp,
   PostgreSQL: SiPostgresql,
   SQL: SiMysql,
+  PrismaORM: SiPrisma,
+  React: SiReact,
+  NextJS: SiNextdotjs,
   Git: SiGit,
   GitHub: SiGithub,
-}
-
+};
 
 export interface SkillType {
-  icon: keyof typeof TechIcons
-  color: string
-  name: string
+  icon: keyof typeof TechIcons;
+  color: string;
+  name: string;
 }
-
-
-
 
 export const skills: SkillType[] = [
   {
@@ -68,7 +65,7 @@ export const skills: SkillType[] = [
     name: "Next.js",
   },
   {
-    icon: "DotNet",
+    icon: "Csharp",
     color: "#512BD4",
     name: ".NET",
   },
@@ -87,9 +84,16 @@ export const skills: SkillType[] = [
     color: "#F05032",
     name: "Git",
   },
+
+  {
+    icon: "PrismaORM",
+    color: "#181717",
+    name: "Prisma ",
+  },
+
   {
     icon: "GitHub",
     color: "#181717",
     name: "GitHub",
   },
-]
+];
