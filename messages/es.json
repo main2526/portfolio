@@ -1,15 +1,15 @@
 {
   "Profile": { "Developer": "Productos web con intención", "Role": "Ingeniería de software", "Contact": "Contacto", "DownloadCV": "Ver currículum", "CVTitle": "Currículum de Johanny Rodriguez", "DownloadFile": "Descargar currículum", "Close": "Cerrar" },
   "Available": { "ava": "Disponible para trabajar" },
-  "AboutMe": { "About": "Un poco sobre mí", "text": "Me gusta tomar una idea que todavía vive entre notas, preguntas y café, y convertirla en algo que una persona pueda abrir y entender sin esfuerzo. Disfruto tanto imaginar la experiencia como resolver lo que ocurre detrás de ella: escuchar, probar, equivocarme y cuidar esos pequeños detalles que hacen que un producto se sienta bien.", "text2": "Desde hace más de dos años construyo para aprender y aprendo para construir. Cada reto me ha enseñado algo distinto, pero todos me han confirmado lo mismo: la buena tecnología no busca impresionar; busca ayudar, acercar y hacerle el día un poco más fácil a alguien.", "pros": "Detrás de cada pantalla hay una persona. Por eso no doy por terminado un trabajo cuando funciona, sino cuando se siente claro, útil y humano." },
+  "AboutMe": { "About": "Un poco sobre mí", "text": "Soy Johanny, desarrollador full-stack enfocado en crear productos web rápidos, claros y fáciles de usar. Trabajo con React, Next.js, TypeScript y Node.js, convirtiendo ideas en experiencias funcionales de principio a fin." },
   "Skills": { "title": "Competencias técnicas", "all": "Todas", "frontend": "Frontend", "backend": "Backend", "tool": "Herramientas", "filterLabel": "Filtrar competencias", "scrollLeft": "Ver competencias anteriores", "scrollRight": "Ver más competencias" },
   "TitleP": { "Pr": "Proyectos seleccionados" },
   "Projects": {
     "swiftStake": { "name": "SwiftStake", "description": "Acerca el staking y los protocolos DeFi a las personas con una experiencia ágil, segura y recompensas visibles en tiempo real." },
-    "restaurantFoodDelivery": { "name": "tmeal-restaurant-delicius", "description": "Simplifica el pedido de comida local con un recorrido directo, desde elegir el restaurante hasta confirmar la orden." },
+    "restaurantFoodDelivery": { "name": "Sazón Local", "description": "Simplifica el pedido de comida local con un recorrido directo, desde elegir el restaurante hasta confirmar la orden." },
     "chatbotAI": { "name": "chatbot-api-key", "description": "Una conversación natural con inteligencia artificial, creada con la API de DeepSeek y Next.js.", "status": "En desarrollo" }
   },
-  "Watch": { "Preview": "Demo", "Github": "Código", "ViewAll": "Ver todos", "Public": "Público" },
+  "Watch": { "Preview": "Demo", "Github": "Código", "ViewAll": "Ver todos", "Public": "Público", "Technologies": "Tecnologías", "TechTitle": "Tecnologías utilizadas", "TechDescription": "El stack principal con el que fue construido este proyecto.", "Close": "Cerrar" },
   "Con": { "v": "Contacto" },
   "ContactMe": { "LinkedIn": "LinkedIn", "GitHub": "GitHub", "WhatsApp": "WhatsApp", "SendMe": "Envíame un mensaje", "Name": "Nombre o empresa", "YourName": "Tu nombre o empresa", "YourEmail": "tu@email.com", "Subject": "Asunto", "SubjectInput": "¿En qué puedo ayudarte?", "Message": "Mensaje", "MessageInput": "Cuéntame sobre tu proyecto", "SendMessage": "Enviar mensaje", "SendIngMessage": "Enviando…", "SendSuccess": "Mensaje enviado. Te responderé pronto.", "SendError": "No se pudo enviar el mensaje. Inténtalo de nuevo." }
 }

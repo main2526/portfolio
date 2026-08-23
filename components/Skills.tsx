@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { ChevronDown } from "lucide-react";
 import { FaCss3Alt, FaGitAlt, FaGithub, FaHtml5, FaJs, FaNodeJs, FaReact } from "react-icons/fa";
 import { SiMysql, SiNextdotjs, SiPostgresql, SiPrisma, SiTailwindcss, SiTypescript } from "react-icons/si";
 
@@ -16,31 +15,68 @@ const skills = [
 ] as const;
 
 const filters = ["all", "frontend", "backend", "tool"] as const;
-const years = [2026, 2025, 2024] as const;
-const totals: Record<(typeof years)[number], number> = { 2026: 12, 2025: 68, 2024: 1 };
-const monthPositions = [0, 4, 8, 13, 17, 21, 26, 30, 34, 39, 43, 48];
+const currentYear = new Date().getUTCFullYear();
+const years = [currentYear, currentYear - 1, currentYear - 2];
+type ContributionLevel = "NONE" | "FIRST_QUARTILE" | "SECOND_QUARTILE" | "THIRD_QUARTILE" | "FOURTH_QUARTILE";
+type ContributionCalendar = {
+  totalContributions: number;
+  months: Array<{ firstDay: string; name: string; totalWeeks: number; year: number }>;
+  weeks: Array<{
+    firstDay: string;
+    contributionDays: Array<{ contributionCount: number; contributionLevel: ContributionLevel; date: string; weekday: number }>;
+  }>;
+};
 
-function activityFor(year: number, total: number) {
-  const cells = Array<number>(371).fill(0);
-  let placed = 0;
-  let cursor = (year * 19) % cells.length;
-  while (placed < total) {
-    cursor = (cursor + 29 + (placed % 9) * 7) % cells.length;
-    if (cells[cursor] === 0) {
-      cells[cursor] = 1 + ((placed * 3 + year) % 4);
-      placed += 1;
-    }
-  }
-  return cells;
+function contributionColor(level: ContributionLevel) {
+  if (level === "FOURTH_QUARTILE") return "bg-[#39d353]";
+  if (level === "THIRD_QUARTILE") return "bg-[#26a641]";
+  if (level === "SECOND_QUARTILE") return "bg-[#006d32]";
+  if (level === "FIRST_QUARTILE") return "bg-[#0e4429]";
+  return "bg-[#ebedf0] dark:bg-[#161b22]";
 }
 
 export default function Skills() {
   const [selected, setSelected] = useState<(typeof filters)[number]>("all");
-  const [year, setYear] = useState<(typeof years)[number]>(2026);
+  const [year, setYear] = useState(years[0]);
+  const [calendar, setCalendar] = useState<ContributionCalendar | null>(null);
+  const [loadingCalendar, setLoadingCalendar] = useState(true);
+  const [calendarError, setCalendarError] = useState(false);
   const locale = useLocale();
   const t = useTranslations("Skills");
   const shown = selected === "all" ? skills : skills.filter((skill) => skill.category === selected);
   const es = locale === "es";
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoadingCalendar(true);
+    setCalendarError(false);
+    fetch(`/api/github-contributions?year=${year}`, { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error();
+        return response.json() as Promise<ContributionCalendar>;
+      })
+      .then((data) => setCalendar(data))
+      .catch((error) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setCalendar(null);
+        setCalendarError(true);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoadingCalendar(false);
+      });
+    return () => controller.abort();
+  }, [year]);
+
+  const monthColumns = calendar?.months.map((month) => {
+    const firstDay = new Date(`${month.firstDay}T00:00:00Z`);
+    const column = calendar.weeks.findIndex((week) => {
+      const start = new Date(`${week.firstDay}T00:00:00Z`);
+      const end = new Date(start);
+      end.setUTCDate(end.getUTCDate() + 6);
+      return firstDay >= start && firstDay <= end;
+    });
+    return { ...month, column: Math.max(0, column) + 1 };
+  }) ?? [];
 
   return (
     <section aria-labelledby="skills-title">
@@ -56,22 +92,24 @@ export default function Skills() {
 
       <div className="mt-7 grid gap-4 lg:grid-cols-[minmax(0,1fr)_128px]">
         <div className="min-w-0">
-          <div className="mb-2 flex items-center justify-between gap-3 px-1">
-            <h3 className="text-base"><strong>{totals[year]}</strong> {es ? `contribuciones en ${year}` : `contributions in ${year}`}</h3>
-            <button type="button" className="focus-ring hidden items-center gap-1 rounded-md px-2 py-1 text-xs text-[#656d76] hover:text-[#1f2328] sm:flex dark:text-[#8b949e] dark:hover:text-[#e6edf3]">{es ? "Configuración de contribuciones" : "Contribution settings"}<ChevronDown className="size-3" /></button>
+          <div className="mb-2 px-1">
+            <h3 className="text-base">{loadingCalendar ? <span className="text-[#656d76] dark:text-[#8b949e]">{es ? "Cargando actividad…" : "Loading activity…"}</span> : calendar ? <><strong>{calendar.totalContributions}</strong> {es ? `contribuciones en ${year}` : `contributions in ${year}`}</> : <span>{es ? `Actividad de ${year}` : `${year} activity`}</span>}</h3>
           </div>
           <div className="rounded-md border border-[#d0d7de] p-3 dark:border-[#30363d] sm:p-4">
-            <div className="overflow-x-auto pb-1">
+            {calendarError ? <div className="flex min-h-36 flex-col items-center justify-center gap-2 text-center"><p className="text-sm font-semibold">{es ? "No se pudo cargar la actividad de GitHub" : "GitHub activity could not be loaded"}</p><a href="https://github.com/main2526" target="_blank" rel="noreferrer" className="text-xs text-[#0969da] hover:underline dark:text-[#2f81f7]">{es ? "Ver perfil en GitHub" : "View GitHub profile"}</a></div> : <div className="overflow-x-auto pb-1">
               <div className="min-w-[735px]">
                 <div className="ml-[39px] grid h-5 grid-cols-[repeat(53,10px)] gap-[3px] text-xs">
-                  {(es ? ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"] : ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]).map((month, index) => <span key={month} className="whitespace-nowrap" style={{ gridColumnStart: monthPositions[index] + 1 }}>{month}</span>)}
+                  {monthColumns.map((month) => <span key={`${month.firstDay}-${month.name}`} className="whitespace-nowrap capitalize" style={{ gridColumnStart: month.column }}>{new Intl.DateTimeFormat(es ? "es" : "en", { month: "short", timeZone: "UTC" }).format(new Date(`${month.firstDay}T00:00:00Z`))}</span>)}
                 </div>
                 <div className="flex gap-[7px]">
                   <div className="grid w-8 shrink-0 grid-rows-7 gap-[3px] text-right text-xs leading-[10px]">
                     <span /><span>{es ? "Lun" : "Mon"}</span><span /><span>{es ? "Mié" : "Wed"}</span><span /><span>{es ? "Vie" : "Fri"}</span><span />
                   </div>
                   <div className="grid grid-flow-col grid-rows-7 gap-[3px]" aria-label={es ? `Actividad de contribuciones de ${year}` : `${year} contribution activity`}>
-                    {activityFor(year, totals[year]).map((level, index) => <span key={`${year}-${index}`} title={level ? `${level} ${es ? "contribuciones" : "contributions"}` : es ? "Sin contribuciones" : "No contributions"} className={`size-[10px] rounded-[2px] border border-black/[.04] ${level === 4 ? "bg-[#39d353]" : level === 3 ? "bg-[#26a641]" : level === 2 ? "bg-[#006d32]" : level === 1 ? "bg-[#0e4429]" : "bg-[#ebedf0] dark:bg-[#161b22]"}`} />)}
+                    {loadingCalendar ? Array.from({ length: 371 }, (_, index) => <span key={`loading-${index}`} className="size-[10px] animate-pulse rounded-[2px] bg-[#ebedf0] dark:bg-[#161b22]" />) : calendar?.weeks.flatMap((week) => Array.from({ length: 7 }, (_, weekday) => {
+                      const day = week.contributionDays.find((item) => item.weekday === weekday);
+                      return day ? <span key={day.date} title={`${day.contributionCount} ${es ? "contribuciones" : "contributions"} · ${day.date}`} className={`size-[10px] rounded-[2px] border border-black/[.04] ${contributionColor(day.contributionLevel)}`} /> : <span key={`${week.firstDay}-${weekday}`} className="size-[10px] opacity-0" />;
+                    }))}
                   </div>
                 </div>
                 <div className="ml-[39px] mt-3 flex items-center justify-between text-xs text-[#656d76] dark:text-[#8b949e]">
@@ -79,7 +117,7 @@ export default function Skills() {
                   <div className="flex items-center gap-1"><span>{es ? "Menos" : "Less"}</span>{[0, 1, 2, 3, 4].map((level) => <span key={level} className={`size-[10px] rounded-[2px] ${level === 4 ? "bg-[#39d353]" : level === 3 ? "bg-[#26a641]" : level === 2 ? "bg-[#006d32]" : level === 1 ? "bg-[#0e4429]" : "bg-[#ebedf0] dark:bg-[#161b22]"}`} />)}<span>{es ? "Más" : "More"}</span></div>
                 </div>
               </div>
-            </div>
+            </div>}
           </div>
         </div>
         <div className="flex gap-1 overflow-x-auto lg:flex-col" aria-label={es ? "Seleccionar año" : "Select year"}>
