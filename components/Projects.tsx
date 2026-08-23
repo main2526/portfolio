@@ -76,8 +76,8 @@ export default function Projects() {
     }
     const rect = button.getBoundingClientRect();
     const edge = 12;
-    const width = Math.min(360, window.innerWidth - edge * 2);
-    const estimatedHeight = project.technologies.length > 6 ? 190 : 160;
+    const width = Math.min(320, window.innerWidth - edge * 2);
+    const estimatedHeight = project.technologies.length > 6 ? 200 : 170;
     const left = Math.min(Math.max(edge, rect.left + rect.width / 2 - width / 2), window.innerWidth - width - edge);
     const fitsBelow = rect.bottom + 8 + estimatedHeight <= window.innerHeight - edge;
     const top = fitsBelow ? rect.bottom + 8 : Math.max(edge, rect.top - estimatedHeight - 8);
@@ -109,7 +109,7 @@ export default function Projects() {
       </section>
       {mounted && selectedProject && createPortal(
         <div className="pointer-events-none fixed inset-0 z-[9999]">
-          <div id="technology-popover" ref={popoverRef} role="dialog" aria-labelledby="technology-popover-title" style={popoverPosition} className="pointer-events-auto fixed rounded-lg border border-[#d0d7de] bg-white/95 p-4 shadow-[0_12px_32px_rgba(31,35,40,.18)] backdrop-blur-md animate-in fade-in zoom-in-95 duration-150 dark:border-[#30363d] dark:bg-[#161b22]/95 dark:shadow-[0_12px_32px_rgba(0,0,0,.45)]">
+          <div id="technology-popover" ref={popoverRef} role="dialog" aria-labelledby="technology-popover-title" style={popoverPosition} className="pointer-events-auto fixed rounded-lg border border-[#d0d7de] bg-white/95 p-3 shadow-[0_12px_32px_rgba(31,35,40,.18)] backdrop-blur-md animate-in fade-in zoom-in-95 duration-150 dark:border-[#30363d] dark:bg-[#161b22]/95 dark:shadow-[0_12px_32px_rgba(0,0,0,.45)]">
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0">
                 <h3 id="technology-popover-title" className="text-sm font-semibold">{watch("TechTitle")}</h3>
@@ -117,13 +117,13 @@ export default function Projects() {
               </div>
               <button type="button" onClick={() => setSelectedProject(null)} className="focus-ring -mr-1 -mt-1 flex size-7 shrink-0 items-center justify-center rounded-md text-[#656d76] hover:bg-[#f3f4f6] dark:text-[#8b949e] dark:hover:bg-[#21262d]" aria-label={watch("Close")}><X className="size-3.5" /></button>
             </div>
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-2.5 grid grid-cols-2 gap-1.5">
                 {selectedProject.technologies.map((technology) => {
                   const Icon = technology.icon;
                   return (
-                    <div key={technology.name} className="flex items-center gap-1.5 rounded-full border border-[#d0d7de] bg-[#f6f8fa] px-2.5 py-1.5 text-xs font-medium dark:border-[#30363d] dark:bg-[#21262d]">
+                    <div key={technology.name} className="flex min-w-0 items-center gap-1.5 rounded-full border border-[#d0d7de] bg-[#f6f8fa] px-2.5 py-1.5 text-xs font-medium dark:border-[#30363d] dark:bg-[#21262d]">
                       <Icon className="size-3.5 shrink-0 text-[#656d76] dark:text-[#8b949e]" aria-hidden="true" />
-                      <span>{technology.name}</span>
+                      <span className="truncate">{technology.name}</span>
                     </div>
                   );
                 })}
